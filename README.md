@@ -1,2 +1,2 @@
 # TianchiBigData
-competition code
+Code for Tianchi Big data competition!
