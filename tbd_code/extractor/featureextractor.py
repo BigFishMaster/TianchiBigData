@@ -1,10 +1,15 @@
 import logging
 import sys
+from ConfigParser import ConfigParser
+
 import userfeatureextractor
 import itemfeatureextractor
 import pairfeatureextractor
 
-
+class FeatureExtractor(object):
+    def __int__(self, configurefile):
+        self.configurefile = configurefile
+        self.conf = ConfigParser()
 def calfeatures(configfilename):
     
 if __name__ == '__main__':
