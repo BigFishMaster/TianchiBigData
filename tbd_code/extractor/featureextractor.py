@@ -6,6 +6,7 @@ import userfeatureextractor
 import itemfeatureextractor
 import pairfeatureextractor
 
+
 class FeatureExtractor(object):
     def __int__(self, configurefile):
         self.configurefile = configurefile
