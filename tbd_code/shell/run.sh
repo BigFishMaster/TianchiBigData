@@ -42,8 +42,8 @@ fi
 
 if [ "$disable_evaluation" != "1" ]; then
     echo "evaluation..." 1>&2
-    $python $shdir/../extractor/featureextractor.py eval val $configure
-    $python $shdir/../extractor/featureextractor.py eval test $configure
+    $python $shdir/../extractor/featureextractor.py evaluate val $configure
+    $python $shdir/../extractor/featureextractor.py evaluate test $configure
 else
     echo "evaluation disabled!"
 fi
