@@ -35,12 +35,14 @@ fi
 
 if [ "$disable_training" != "1" ]; then
     echo "training..." 1>&2
+    $python $shdir/../extractor/featureextractor.py train train $configure
 else
     echo "training disabled!"
 fi
 
 if [ "$disable_evaluation" != "1" ]; then
     echo "evaluation..." 1>&2
+    $python $shdir/../extractor/featureextractor.py eval val $configure
 else
     echo "evaluation disabled!"
 fi
