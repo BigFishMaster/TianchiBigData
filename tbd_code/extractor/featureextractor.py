@@ -20,8 +20,7 @@ class FeatureExtractor(object):
             logging.error("fail to call self.conf.init(%s)",configurefile)
             raise Exception('%s not exist'%configurefile)
         self.conf.readfp(open(configurefile,'r'))
-        self.featureconfigurefile  =  self.conf.get(self.sectionname,"confname")
-    
+        self.initfeaturecal()
     def caltimeperiod(self, timelist):
         if len(timelist)%2 != 0:
             logging.error("the time length of the %s set is %d, it must be even!", self.field, len(timelist))
@@ -34,10 +33,10 @@ class FeatureExtractor(object):
         
     def initfeaturecal(self):
         # field-specific parameters
-        timelist = self.conf.get(self.sectionname,self.field+".time").split(',')
+        timelist = self.conf.get(self.sectionname,self.field+"data.time").split(',')
         period = self.caltimeperiod(timelist)
         self.period = period
-        savename = self.conf.get(self.sectionname,self.field+".savename")
+        savename = self.conf.get(self.sectionname,self.field+"data.savename")
         self.savename = savename
         # global parameters: feature types
         self.featureconfname = self.conf.get(self.sectionname, "confname")
@@ -45,16 +44,15 @@ class FeatureExtractor(object):
         self.featurelist = {}
         for name in self.featurenames:
             self.featurelist[name] = self.conf.get(self.sectionname, name + ".list").split(",")
-
-        self.featureindex = {}
-        for name in self.featurenames:
-            self.featureindex[name] = self.conf.get(self.sectionname, name + ".index").split(",")
-
+    
+    def process(self):
+        
 # field: train, val, test
 # configfilename: used to initialize time period and feature type.
 def calfeatures(field, configfilename):
     feacal  = FeatureExtractor(configfilename,'featurecal', field)
 
+def combine(field, configfilename):
 # classification:
 # feature: [[],[],[]]
 # label: [,,]

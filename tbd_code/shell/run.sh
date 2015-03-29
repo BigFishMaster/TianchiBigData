@@ -14,6 +14,7 @@ if [ "$disable_caltrainfeaturelabel" != "1" ]; then
     echo "calculate training feature and label..." 1>&2
     $python $shdir/../extractor/featureextractor.py calfeatures train $configure
     $python $shdir/../extractor/featureextractor.py callabels train $configure
+    $python $shdir/../extractor/featureextractor.py calcombine train $configure
 else
     echo "calculate training feature and label disabled!"
 fi
@@ -22,6 +23,7 @@ if [ "$disable_calvalfeaturelabel" != "1" ]; then
     echo "calculate validation feature and label..." 1>&2
     $python $shdir/../extractor/featureextractor.py calfeatures val $configure
     $python $shdir/../extractor/featureextractor.py callabels val $configure
+    $python $shdir/../extractor/featureextractor.py calcombine val $configure
 else
     echo "calculate validation feature and label disabled!"
 fi
@@ -43,7 +45,7 @@ fi
 if [ "$disable_evaluation" != "1" ]; then
     echo "evaluation..." 1>&2
     $python $shdir/../extractor/featureextractor.py evaluate val $configure
-    $python $shdir/../extractor/featureextractor.py evaluate test $configure
+    #$python $shdir/../extractor/featureextractor.py evaluate test $configure
 else
     echo "evaluation disabled!"
 fi
