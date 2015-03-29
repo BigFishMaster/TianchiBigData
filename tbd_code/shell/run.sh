@@ -32,3 +32,21 @@ if [ "$disable_caltestfeature" != "1" ]; then
 else
     echo "calculate testing feature and label disabled!"
 fi
+
+if [ "$disable_training" != "1" ]; then
+    echo "training..." 1>&2
+else
+    echo "training disabled!"
+fi
+
+if [ "$disable_evaluation" != "1" ]; then
+    echo "evaluation..." 1>&2
+else
+    echo "evaluation disabled!"
+fi
+
+if [ "$disable_submisssion" != "1" ]; then
+    echo "submission..." 1>&2
+else
+    echo "submission disabled!"
+fi
