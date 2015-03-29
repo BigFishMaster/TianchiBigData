@@ -15,6 +15,12 @@ def calfeatures(field, configfilename):
     # field: train, val, test
     # configfilename: used to initialize time period and feature type.
 
+def train(field, configfilename):
+    
+def evaluate(field, configfilename):
+
+def submit(field, configfilename):
+
     
 if __name__ == '__main__':
     LOG_LEVEL = logging.DEBUG
