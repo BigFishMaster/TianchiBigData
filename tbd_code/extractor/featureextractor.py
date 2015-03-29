@@ -33,11 +33,24 @@ class FeatureExtractor(object):
         return period
         
     def initfeaturecal(self):
+        # field-specific parameters
         timelist = self.conf.get(self.sectionname,self.field+".time").split(',')
         period = self.caltimeperiod(timelist)
         self.period = period
-        savename = self.conf.get(self.sectionname,self.field+".savename").split(',')
-
+        savename = self.conf.get(self.sectionname,self.field+".savename")
+        self.savename = savename
+        # global parameters: feature types
+        self.featureconfname = self.conf.get(self.sectionname, confname)
+        self.featurename = {}
+        self.featurename['user'] = self.conf.get(self.sectionname, "user.list").split(",")
+        self.featurename['item'] = self.conf.get(self.sectionname, "item.list").split(",")
+        self.featurename['pair'] = self.conf.get(self.sectionname, "pair.list").split(",")
+        self.featureindex['user'] = self.conf.get(self.sectionname, "user.index")
+        self.featureindex['item'] = self.conf.get(self.sectionname, "item.index")
+        self.featureindex['pair'] = self.conf.get(self.sectionname, "pair.index")
+       
+        self.conf.get(self.sectionname, "user.list").split(",")
+        
         featcalusedindex = []
         featurecalnames = []
         self.inputimagenames = []
