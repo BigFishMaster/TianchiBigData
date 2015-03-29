@@ -1,0 +1,34 @@
+shdir=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+
+configure=$1
+python="python_path"
+
+disable_caltrainfeaturelabel=1
+disable_calvalfeaturelabel=1
+disable_caltestfeature=1
+disable_training=1
+disable_evaluation=1
+disable_submisssion=1
+
+if [ "$disable_caltrainfeaturelabel" != "1" ]; then
+    echo "calculate training feature and label..." 1>&2
+    $python $shdir/../extractor/featureextractor.py calfeatures train $configure
+    $python $shdir/../extractor/featureextractor.py callabels train $configure
+else
+    echo "calculate training feature and label disabled!"
+fi
+
+if [ "$disable_calvalfeaturelabel" != "1" ]; then
+    echo "calculate validation feature and label..." 1>&2
+    $python $shdir/../extractor/featureextractor.py calfeatures val $configure
+    $python $shdir/../extractor/featureextractor.py callabels val $configure
+else
+    echo "calculate validation feature and label disabled!"
+fi
+
+if [ "$disable_caltestfeature" != "1" ]; then
+    echo "calculate testing feature..." 1>&2
+    $python $shdir/../extractor/featureextractor.py calfeatures test $configure
+else
+    echo "calculate testing feature and label disabled!"
+fi
