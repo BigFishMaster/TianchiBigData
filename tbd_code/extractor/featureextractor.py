@@ -11,7 +11,10 @@ class FeatureExtractor(object):
     def __int__(self, configurefile):
         self.configurefile = configurefile
         self.conf = ConfigParser()
-def calfeatures(configfilename):
+def calfeatures(field, configfilename):
+    # field: train, val, test
+    # configfilename: used to initialize time period and feature type.
+
     
 if __name__ == '__main__':
     LOG_LEVEL = logging.DEBUG
