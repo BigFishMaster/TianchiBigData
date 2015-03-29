@@ -43,12 +43,14 @@ fi
 if [ "$disable_evaluation" != "1" ]; then
     echo "evaluation..." 1>&2
     $python $shdir/../extractor/featureextractor.py eval val $configure
+    $python $shdir/../extractor/featureextractor.py eval test $configure
 else
     echo "evaluation disabled!"
 fi
 
 if [ "$disable_submisssion" != "1" ]; then
     echo "submission..." 1>&2
+    $python $shdir/../extractor/featureextractor.py submit test $configure
 else
     echo "submission disabled!"
 fi
