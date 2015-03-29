@@ -52,14 +52,18 @@ class FeatureExtractor(object):
 def calfeatures(field, configfilename):
     feacal  = FeatureExtractor(configfilename,'featurecal', field)
 
+# combine the feature and label together.
 def combine(field, configfilename):
+    
 # classification:
 # feature: [[],[],[]]
 # label: [,,]
 def train(field, configfilename):
-    
+
+# evaluate the F-score on validation set
 def evaluate(field, configfilename):
 
+# submit the result of test data according to target item.
 def submit(field, configfilename):
 
     
