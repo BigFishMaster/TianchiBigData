@@ -5,6 +5,7 @@ import numpy
 # use sklearn to classify something.
 import sklearn 
 import cPickle
+import os
 import userfeatureextractor
 import itemfeatureextractor
 import pairfeatureextractor
@@ -39,11 +40,13 @@ class LabelExtractor(object):
         self.period = period
         savename = self.conf.get(self.sectionname,self.field+"label.savename")
         self.savename = savename     
+        # globale 
+        self.savefolder = self.conf.get(self.sectionname, "savefolder")
     def process(self):
-        labels = labelextractor.extract()
+        labels = labelextractor.extract(self)
         if self.savename != "":
             #save 
-            np.save(self.savename, labels)
+            np.save(os.path.join(self.savefolder, self.savename), labels)
             # load
             # lab = np.load("name").all()
         
@@ -103,6 +106,7 @@ class FeatureExtractor(object):
         savename = self.conf.get(self.sectionname,self.field+"data.savename")
         self.savename = savename
         # global parameters: feature types
+        self.savefolder = self.conf.get(self.sectionname, "savefolder")
         self.featureconfname = self.conf.get(self.sectionname, "confname")
         self.featurenames = self.conf.get(self.sectionname, "featurenames").split(",")
         self.featurelist = {}
@@ -134,7 +138,7 @@ class FeatureExtractor(object):
         combfeature = self.combine(fea, feaindex)
         if self.savename != "":
             #save 
-            np.save(self.savename, combfeature)
+            np.save(os.path.join(self.savefolder, self.savename), combfeature)
             # load
             # fea = np.load("name").all()
         
