@@ -221,7 +221,7 @@ def calcombine(field, configfilename):
     features = np.array(features)
     labs = np.array(labs)
         
-    if flag != "1":
+    if flag != "1" or field == "val":
         if savename != "":        
             np.save(os.path.join(savefolder, savename), [features, labs])
         return [features, labs]
