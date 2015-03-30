@@ -1,7 +1,9 @@
+# sh run.sh configure.ini
 shdir=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
 
+#configure=$shdir/conf/configure.ini
 configure=$1
-python="python_path"
+python="PYTHON PATH"
 
 disable_caltrainfeaturelabel=1
 disable_calvalfeaturelabel=1

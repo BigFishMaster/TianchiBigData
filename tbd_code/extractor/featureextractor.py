@@ -46,7 +46,31 @@ class FeatureExtractor(object):
             self.featurelist[name] = self.conf.get(self.sectionname, name + ".list").split(",")
     
     def process(self):
-        
+        fea = {}
+        feaindex = []
+        # user feature:
+        # fea['user']['userid']: [,,,]
+        # fea['user']['fea']: [,,,]      
+        if "user" in self.featurelist:
+            fea['user'] = userfeatureextractor.extract(self)
+            feaindex.append("userid")
+        # item feature: 
+        # fea['item']['itemid']: [,,,]
+        # fea['item']['fea']: [,,,]            
+        if "item" in self.featurelist:
+            fea['item'] = itemfeatureextractor.extract(self)
+            feaindex.append("itemid")
+        # pair feature: 
+        # fea['pair']['userid']: [,,,]
+        # fea['pair']['itemid']: [,,,]
+        # fea['pair']['fea']: [,,,]          
+        if "pair" in self.featurelist:       
+            fea['pair'] = pairfeatureextractor.extract(self)
+            
+        combfeature = self.combine(fea, feaindex)
+    
+    def combine(self, fea, feaindex):
+        for 
 # field: train, val, test
 # configfilename: used to initialize time period and feature type.
 def calfeatures(field, configfilename):
