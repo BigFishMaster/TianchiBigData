@@ -1,7 +1,7 @@
 import logging
 import sys
 from ConfigParser import ConfigParser
-import numpy
+import numpy as np
 # use sklearn to classify something.
 import sklearn 
 import cPickle
@@ -43,8 +43,9 @@ class LabelExtractor(object):
         # globale 
         self.savefolder = self.conf.get(self.sectionname, "savefolder")
     def process(self):
-        #labels:
-        # userid, itemid, label
+        #labels: dict i.e. ["userid,itemid":label]
+        # key:userid, itemid
+        # value: label
         labels = labelextractor.extract(self)
         if self.savename != "":
             #save 
@@ -180,13 +181,66 @@ def calfeatures(field, configfilename):
 # combine the feature and label together.
 def calcombine(field, configfilename):
     conf = ConfigParser()
-    loadfolder = conf.get("label", "loadfolder")
-    feafile = conf.get("label", field + ".feafile")
+    loadfolder = conf.get("combine", "loadfolder")
+    feafile = conf.get("combine", field + ".feafile")
     #loda features from file
     features = np.load(os.path.join(loadfolder, feafile)).all()
     # load labels from file    
-    labfile = conf.get("label", field + ".labfile")
+    labfile = conf.get("combine", field + ".labfile")
     labels = np.load(os.path.join(loadfolder, labfile)).all()
+    
+    # positive ratio
+    flag, ratio = conf.get("combine", "sample_flag").split(',')
+    ratio = float(ratio)
+    
+    pos_label_count = 0
+    neg_label_count = 0
+        
+    labs = []
+    for i in range(len(features["userid"])):
+        userid = features["userid"][i]
+        itemid = features["itemid"][i]
+        key = userid + "," + itemid
+        label = 0
+        if key in labels:
+            label = labels[key]
+        labs.append(label)
+        
+        if label == 0:
+            neg_label_count += 1
+        else:
+            pos_label_count += 1
+    logging.debug("the positive and negative labels are %d:%d", \
+                    pos_label_count, neg_label_count)
+    logging.debug("the positive ratio is %f", \
+                    pos_label_count*1.0/(neg_label_count + pos_label_count))
+    
+    features = np.array(features)
+    labs = np.array(labs)
+        
+    if flag != "1":
+        return [features, labs]
+    
+    
+    possample = pos_label_count
+    negsample = int(possample/ratio-possample)
+    
+    posfea = features[labs==1]
+    negfea = features[labs==0]
+    features = []
+    # random sample
+    import random
+    ind = range(0, len(negfea))
+    random.shuffle(ind)
+    np.save("randomed_index_for_negative_sampling.npy", ind)
+    ind = ind[:negsample]
+    negfea = negfea[ind]
+    
+    # never shuffle again ,does it need ???    
+    features = posfea + negfea
+    labs = [1]*len(posfea) + [0]*len(negfea)
+    
+    return [features, labs]
     
 def callabels(field, configfilename):
     labcal = LabelExtractor(configfilename, 'label', field)
