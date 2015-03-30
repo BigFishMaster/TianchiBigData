@@ -43,7 +43,7 @@ class LabelExtractor(object):
         # globale 
         self.savefolder = self.conf.get(self.sectionname, "savefolder")
     def process(self):
-        #labels: dict i.e. ["userid,itemid":label]
+        #labels: dict i.e. {"userid,itemid":label}
         # key:userid, itemid
         # value: label
         labels = labelextractor.extract(self)
@@ -182,16 +182,19 @@ def calfeatures(field, configfilename):
 def calcombine(field, configfilename):
     conf = ConfigParser()
     loadfolder = conf.get("combine", "loadfolder")
-    feafile = conf.get("combine", field + ".feafile")
     #loda features from file
+    feafile = conf.get("combine", field + ".feafile")
     features = np.load(os.path.join(loadfolder, feafile)).all()
     # load labels from file    
     labfile = conf.get("combine", field + ".labfile")
     labels = np.load(os.path.join(loadfolder, labfile)).all()
-    
+    #load savename 
+    savename = conf.get("combine", field + ".savename")
     # positive ratio
     flag, ratio = conf.get("combine", "sample_flag").split(',')
     ratio = float(ratio)
+    
+    savefolder = conf.get("combine", "savefolder")
     
     pos_label_count = 0
     neg_label_count = 0
@@ -219,6 +222,8 @@ def calcombine(field, configfilename):
     labs = np.array(labs)
         
     if flag != "1":
+        if savename != "":        
+            np.save(os.path.join(savefolder, savename), [features, labs])
         return [features, labs]
     
     
@@ -240,6 +245,8 @@ def calcombine(field, configfilename):
     features = posfea + negfea
     labs = [1]*len(posfea) + [0]*len(negfea)
     
+    if savename != "":
+        np.save(os.path.join(savefolder, savename), [features, labs])
     return [features, labs]
     
 def callabels(field, configfilename):
@@ -249,14 +256,40 @@ def callabels(field, configfilename):
 # classification:
 # feature: [[],[],[]]
 # label: [,,]
+from sklearn.linear_model import LogisticRegression
 def train(field, configfilename):
-    pass
+    loadfolder = conf.get("train", "loadfolder")
+    savefolder = conf.get("train", "savefolder")    
+    traindatafile = conf.get("train","traindatafile")
+    modelname = conf.get("train","modelname")
+        
+    features, labels = np.load(os.path.join(loadfolder, traindatafile))
+    clf_l2_LR = LogisticRegression(C=10, penalty='l2', tol=0.01)
+    clf_l2_LR.fit(features, labels)
+    if savename != "":
+        np.save(os.path.join(savefolder, savename), clf_l2_LR)
+    return clf_l2_LR
 # evaluate the F-score on validation set
 def evaluate(field, configfilename):
-    pass
+    disable_val = conf.get("train", "disable_val")
+    if disable_val == "1":
+            return
+    loadmodelfolder = conf.get("train", "loadmodelfolder")
+    modelname = conf.get("train", "modelname")
+    loadfeaturefolder = conf.get("train", "loadfeaturefolder")
+    featurefile = conf.get("train", "featurefile")
+    labelfile = conf.get("train", "labelfile")
+    
+    model = np.load(os.path.join(loadmodelfolder, modelname))
+    features = np.load(os.path.join(loadfeaturefolder, featurefile))
+    labels = np.load(os.path.join(loadfeaturefolder, labelfile))
+        
+    #pred = clf.score(features, labels)  
+    pred = clf.predict(features)
+    #get F-score
 # submit the result of test data according to target item.
 def submit(field, configfilename):
-    pass
+    
     
 if __name__ == '__main__':
     LOG_LEVEL = logging.DEBUG
