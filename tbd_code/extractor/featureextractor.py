@@ -43,6 +43,8 @@ class LabelExtractor(object):
         # globale 
         self.savefolder = self.conf.get(self.sectionname, "savefolder")
     def process(self):
+        #labels:
+        # userid, itemid, label
         labels = labelextractor.extract(self)
         if self.savename != "":
             #save 
@@ -177,7 +179,14 @@ def calfeatures(field, configfilename):
     return features
 # combine the feature and label together.
 def calcombine(field, configfilename):
-    pass    
+    conf = ConfigParser()
+    loadfolder = conf.get("label", "loadfolder")
+    feafile = conf.get("label", field + ".feafile")
+    #loda features from file
+    features = np.load(os.path.join(loadfolder, feafile)).all()
+    # load labels from file    
+    labfile = conf.get("label", field + ".labfile")
+    labels = np.load(os.path.join(loadfolder, labfile)).all()
     
 def callabels(field, configfilename):
     labcal = LabelExtractor(configfilename, 'label', field)
