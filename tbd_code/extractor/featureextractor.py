@@ -49,17 +49,17 @@ class FeatureExtractor(object):
         fea = {}
         feaindex = []
         # user feature:
-        # fea['user']['userid']: [,,,]
+        # fea['user']['id']: [,,,]
         # fea['user']['fea']: [,,,]      
         if "user" in self.featurelist:
             fea['user'] = userfeatureextractor.extract(self)
-            feaindex.append("userid")
+            feaindex.append("user")
         # item feature: 
-        # fea['item']['itemid']: [,,,]
+        # fea['item']['id']: [,,,]
         # fea['item']['fea']: [,,,]            
         if "item" in self.featurelist:
             fea['item'] = itemfeatureextractor.extract(self)
-            feaindex.append("itemid")
+            feaindex.append("item")
         # pair feature: 
         # fea['pair']['userid']: [,,,]
         # fea['pair']['itemid']: [,,,]
@@ -70,7 +70,33 @@ class FeatureExtractor(object):
         combfeature = self.combine(fea, feaindex)
     
     def combine(self, fea, feaindex):
-        for 
+        if "pair" not in fea:
+            logging.error("No pair feature calcualted")
+            raise Exception('NO PAIR FEATURE ERROR!')
+        #useridlist = fea['pair']['userid']
+        #itemidlist = fea['pair']['itemid']
+        if len(fea) == 1 and "pair" in fea:
+            return fea["pair"]
+        
+        for index in feaindex:
+            emptycount = 0
+            f = fea[index]
+            ids = f['id']
+            ff = f['fea']
+            ff_len = len(ff[0])
+            for i, idd in enumerate(fea['pair'][index+"id"]):
+                ind = [c for c, j in enumerate(a) if j==idd]
+                if ind == []:
+                    fea['pair']['fea'][i] += [0]*ff_len
+                    emptycount += 1
+                else:
+                    fea['pair']['fea'][i] += ff[ind[0]]
+                    
+            logging.debug("the empty count of %s feature is %d", index, emptycount)
+         
+         logging.debug("the length of final feature is %d", len(fea['pair']['fea'][0]))
+         
+         return fea['pair']
 # field: train, val, test
 # configfilename: used to initialize time period and feature type.
 def calfeatures(field, configfilename):
