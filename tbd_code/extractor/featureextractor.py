@@ -6,9 +6,9 @@ import numpy as np
 import sklearn 
 import cPickle
 import os
-import userfeatureextractor
-import itemfeatureextractor
-import pairfeatureextractor
+from userfeatureextractor import UFE
+from itemfeatureextractor import IFE
+from pairfeatureextractor import PFE
 import labelextractor
 from timemapper import timemapper
 
@@ -111,6 +111,7 @@ class FeatureExtractor(object):
         # global parameters: feature types
         self.savefolder = self.conf.get(self.sectionname, "savefolder")
         self.featureconfname = self.conf.get(self.sectionname, "confname")
+        self.inputname = self.conf.get(self.sectionname, "inputname")
         self.featurenames = self.conf.get(self.sectionname, "featurenames").split(",")
         self.featurelist = {}
         for name in self.featurenames:
@@ -123,20 +124,23 @@ class FeatureExtractor(object):
         # fea['user']['id']: [,,,]
         # fea['user']['fea']: [,,,]      
         if "user" in self.featurelist:
-            fea['user'] = userfeatureextractor.extract(self)
+            ufe = UFE(self)
+            fea['user'] = ufe.extract()
             feaindex.append("user")
         # item feature: 
         # fea['item']['id']: [,,,]
         # fea['item']['fea']: [,,,]            
         if "item" in self.featurelist:
-            fea['item'] = itemfeatureextractor.extract(self)
+            ife = IFE(self)
+            fea['item'] = ife.extract()
             feaindex.append("item")
         # pair feature: 
         # fea['pair']['userid']: [,,,]
         # fea['pair']['itemid']: [,,,]
         # fea['pair']['fea']: [,,,]          
-        if "pair" in self.featurelist:       
-            fea['pair'] = pairfeatureextractor.extract(self)
+        if "pair" in self.featurelist:   
+            pfe = PFE(self)
+            fea['pair'] = pfe.extract()
             
         combfeature = self.combine(fea, feaindex)
         if self.savename != "":
