@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import timemapper
-import weekmapper
+from timemapper import timemapper
+from weekmapper import weekmapper
 class PFE(object):
     def __int__(self, params):
         self.period = params['user'].period
@@ -16,9 +16,24 @@ class PFE(object):
         # dim : 4-dim distribution
         # input : metadata: {[userid],[itemid], [behavior]}
 
-    def clickbuystorecart( mdata ):
-        
-        
+    def clickbuystorecart( mdata ): # 12-dim
+        fea = np.zeros(12)           
+        for item in mdata:
+            behavior_type, user_geohash, item_category, day, hour = item
+            if day not in weekmapper:
+                continue
+            specday = weekmapper[day]
+            btype = float(behavior_type)
+            if specday in [5]:
+                fea[4*0+btype] += btype
+            elif specday in [6, 7]:
+                fea[4*1+btype] += btype
+            elif specday in [1, 2, 3, 4]:
+                fea[4*2+btype] += btype
+
+        fea = fea/(np.sum(fea)+0.000001)
+        return fea
+
     def extract():
         metadata = self.preprocess()
         res = {}
@@ -44,12 +59,26 @@ class PFE(object):
     # input original data
     def preprocess( ):
         list = open(self.inputname, 'r').readlines()
+        start_day = self.period[0]
+        end_day = self.period[1]
+        period_day = range(star_day, end_day+1)
         metadata = {}
         for i, item in enumerate(list):
             if i == 0: # skip the first line
                     continue
             tmp, hour = item.strip().split(" ")
-            userid, itemid, behavior_type, user_geohash, item_category, day = tmp.strip(',')
+            
+            tmp_item = tmp.strip(',')
+            if len(tmp_item) != 6:
+                continue
+            userid, itemid, behavior_type, user_geohash, item_category, day = tmp_item
+            # FATAL day is not allowed            
+            if day not in timemapper:
+                continue
+            current_day = timemapper[day]
+            # day is limited by configuration
+            if current_day not in period_day:
+                continue
             key = userid + "," + itemid
             if key not in metadata:
                 metadata[key] = []
