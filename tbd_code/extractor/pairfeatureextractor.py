@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+import timemapper
+import weekmapper
 class PFE(object):
     def __int__(self, params):
         self.period = params['user'].period
@@ -16,6 +17,7 @@ class PFE(object):
         # input : metadata: {[userid],[itemid], [behavior]}
 
     def clickbuystorecart( mdata ):
+        
         
     def extract():
         metadata = self.preprocess()
