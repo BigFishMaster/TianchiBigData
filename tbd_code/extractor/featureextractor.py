@@ -293,7 +293,7 @@ def evaluate(field, configfilename):
     #get F-score
 # submit the result of test data according to target item.
 def submit(field, configfilename):
-    
+    pass
     
 if __name__ == '__main__':
     LOG_LEVEL = logging.DEBUG

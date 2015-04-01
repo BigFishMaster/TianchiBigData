@@ -1,4 +1,4 @@
-# sh run.sh configure.ini
+#!/bin/bash
 shdir=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
 
 #configure=$shdir/conf/configure.ini
