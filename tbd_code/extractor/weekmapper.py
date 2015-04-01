@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
-# -*- coding: utf-8 -*-
-timemapper = \
+weekmapper = \
 {"2014-11-18":2,
 "2014-11-19":3,
 "2014-11-20":4,

@@ -2,7 +2,7 @@
 from timemapper import timemapper
 from weekmapper import weekmapper
 class PFE(object):
-    def __int__(self, params):
+    def __init__(self, params):
         self.period = params['user'].period
         self.featurelist = params['user'].featurelist
         self.featureconfname = params['user'].featureconfname

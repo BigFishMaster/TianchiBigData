@@ -6,14 +6,14 @@ import numpy as np
 import sklearn 
 import cPickle
 import os
-from userfeatureextractor import UFE
-from itemfeatureextractor import IFE
+#from userfeatureextractor import UFE
+#from itemfeatureextractor import IFE
 from pairfeatureextractor import PFE
 import labelextractor
 from timemapper import timemapper
 
 class LabelExtractor(object):
-    def __int__(self, configurefile, prefix, field):
+    def __init__(self, configurefile, prefix, field):
         self.configurefile = configurefile
         self.conf = ConfigParser()
         self.sectionname = prefix
@@ -26,11 +26,11 @@ class LabelExtractor(object):
     def caltimeperiod(self, timelist):
         if len(timelist)%2 != 0:
             logging.error("the time length of the %s set is %d, it must be even!", self.field, len(timelist))
-            raise Exception('time list lenght ERROR')
+            raise Exception('time list length ERROR')
         period = []
         for i in range(len(timelist)/2):
             t1, t2 = timelist[2*i: 2*i + 2]
-            period.append(timemapper[t1],timemapper[t2])
+            period.append([timemapper[t1],timemapper[t2]])
         return period
         
     def initlabelcal(self):
@@ -81,7 +81,7 @@ class LabelExtractor(object):
         return fea['pair'] 
          
 class FeatureExtractor(object):
-    def __int__(self, configurefile, prefix, field ):
+    def __init__(self, configurefile, prefix, field ):
         self.configurefile = configurefile
         self.conf = ConfigParser()
         self.sectionname = prefix
