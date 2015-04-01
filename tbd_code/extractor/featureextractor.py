@@ -13,7 +13,7 @@ import labelextractor
 from timemapper import timemapper
 
 class LabelExtractor(object):
-    def __int__(self, configurefile, prefix = "general", field):
+    def __int__(self, configurefile, prefix, field):
         self.configurefile = configurefile
         self.conf = ConfigParser()
         self.sectionname = prefix
@@ -81,7 +81,7 @@ class LabelExtractor(object):
         return fea['pair'] 
          
 class FeatureExtractor(object):
-    def __int__(self, configurefile, prefix = "general", field):
+    def __int__(self, configurefile, prefix, field ):
         self.configurefile = configurefile
         self.conf = ConfigParser()
         self.sectionname = prefix

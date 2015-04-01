@@ -3,9 +3,9 @@ shdir=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
 
 #configure=$shdir/conf/configure.ini
 configure=$1
-python="PYTHON PATH"
+python="/home/ssd/yancanxiang/tools_classification/caffe_lgy/cxdist_with_caffe/cxdist/run"
 
-disable_caltrainfeaturelabel=1
+disable_caltrainfeaturelabel=0
 disable_calvalfeaturelabel=1
 disable_caltestfeature=1
 disable_training=1
